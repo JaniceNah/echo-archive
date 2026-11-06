@@ -1,0 +1,1195 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: #eae8e2;
+  --color-paper-2: #e1dfd8;
+  --color-paper-3: #d5d2ca;
+  --color-sheet: #f5f3ed;
+  --color-ink: #191a1c;
+  --color-ink-80: #33353a;
+  --color-ink-60: #5b5d63;
+  --color-ink-40: #8b8c8f;
+  --color-line: #b8b5ac;
+  --color-line-soft: #cbc8bf;
+  --color-red: #8a3a31;
+  --color-red-2: #a6544a;
+  --color-red-soft: #c8a29b;
+  --color-brass: #8a7b66;
+  --color-night: #141518;
+  --font-body: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-title: 'Songti SC', 'STSong', 'SimSun', 'Noto Serif SC', serif;
+  --font-mono: 'SFMono-Regular', 'Courier New', 'Liberation Mono', monospace;
+}
+
+:root {
+  color-scheme: light;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(rgba(25, 26, 28, 0.055) 0.55px, transparent 0.65px),
+    radial-gradient(rgba(25, 26, 28, 0.035) 0.5px, transparent 0.6px);
+  background-position: 0 0, 1.6px 1.8px;
+  background-size: 3.4px 3.4px, 4.6px 4.6px;
+  min-width: 320px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+@layer base {
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- typography helpers ---------- */
+
+.title-serif {
+  font-family: var(--font-title);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  letter-spacing: 0.34em;
+}
+
+.pixel-title {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-shadow:
+    2px 0 0 var(--color-ink),
+    -2px 0 0 var(--color-ink),
+    0 2px 0 var(--color-ink),
+    0 -2px 0 var(--color-ink);
+}
+
+/* ---------- textures ---------- */
+
+.halftone {
+  background-image: radial-gradient(rgba(25, 26, 28, 0.72) 0.85px, transparent 0.95px);
+  background-size: 5px 5px;
+}
+
+.halftone-soft {
+  background-image: radial-gradient(rgba(25, 26, 28, 0.42) 0.7px, transparent 0.8px);
+  background-size: 4px 4px;
+}
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(25, 26, 28, 0.045) 2px,
+    rgba(25, 26, 28, 0.045) 3px
+  );
+}
+
+.grid-paper {
+  background-image:
+    linear-gradient(to right, rgba(25, 26, 28, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(25, 26, 28, 0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(25, 26, 28, 0.2) 0,
+    rgba(25, 26, 28, 0.2) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+}
+
+/* ---------- paper objects ---------- */
+
+/* Paper is the carrier for the archive UI. Each sheet is a physical object:
+   warm fibrous stock, a deckled silhouette, and a shadow that falls on the
+   scene. The deckle is clipped from the sheet itself; the wrapper owns the
+   drop shadow so it follows the torn outline instead of the bounding box. */
+.paper-frame {
+  position: relative;
+  filter:
+    drop-shadow(0 0 0.7px rgba(38, 28, 16, 0.85))
+    drop-shadow(4px 5px 0 rgba(16, 13, 9, 0.55))
+    drop-shadow(0 20px 30px rgba(0, 0, 0, 0.34));
+}
+
+.paper-sheet {
+  background-color: #f6efdf;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='5' viewBox='0 0 26 5'%3E%3Cpath d='M0 3.4 L2 2.8 L4 3.5 L6 2.9 L8 3.6 L10 2.7 L12 3.4 L14 2.9 L16 3.5 L18 2.8 L20 3.4 L22 2.9 L24 3.5 L26 3' fill='none' stroke='%23191a1c' stroke-opacity='.42' stroke-width='.8'/%3E%3C/svg%3E"),
+    radial-gradient(rgba(94, 72, 42, 0.11) 0.55px, transparent 0.82px),
+    radial-gradient(rgba(94, 72, 42, 0.07) 0.5px, transparent 0.78px),
+    repeating-linear-gradient(0deg, rgba(120, 96, 58, 0.028) 0 1px, transparent 1px 27px),
+    radial-gradient(ellipse at 14% 0%, rgba(255, 252, 242, 0.65), transparent 58%),
+    radial-gradient(ellipse at 90% 104%, rgba(122, 92, 50, 0.17), transparent 60%),
+    linear-gradient(180deg, #faf5e8 0%, #f2e9d5 100%);
+  background-size:
+    26px 5px,
+    3.1px 3.1px,
+    5.4px 5.4px,
+    100% 27px,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    0 7px,
+    0 0,
+    1.7px 1.9px,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+  background-repeat: repeat-x, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat;
+}
+
+.paper-deckle {
+  clip-path: polygon(
+    0% 2px,
+    2.5% 3.6px,
+    5% 2.8px,
+    7.5% 1.2px,
+    10% 4.4px,
+    12.5% 1.2px,
+    15% 4.4px,
+    17.5% 1.2px,
+    20% 1.2px,
+    22.5% 5.2px,
+    25% 2.8px,
+    27.5% 2.8px,
+    30% 1.2px,
+    32.5% 1.2px,
+    35% 5.2px,
+    37.5% 3.6px,
+    40% 3.6px,
+    42.5% 5.2px,
+    45% 1.2px,
+    47.5% 2.8px,
+    50% 2px,
+    52.5% 2.8px,
+    55% 2px,
+    57.5% 2.8px,
+    60% 3.6px,
+    62.5% 4.4px,
+    65% 2px,
+    67.5% 2px,
+    70% 1.2px,
+    72.5% 2px,
+    75% 4.4px,
+    77.5% 4.4px,
+    80% 2px,
+    82.5% 1.2px,
+    85% 5.2px,
+    87.5% 2px,
+    90% 1.2px,
+    92.5% 1.2px,
+    95% 4.4px,
+    97.5% 4.4px,
+    100% 2.8px,
+    calc(100% - 0.6px) 10%,
+    calc(100% - 0.6px) 20%,
+    calc(100% - 2.4px) 30%,
+    calc(100% - 0.6px) 40%,
+    calc(100% - 1.2px) 50%,
+    calc(100% - 1.2px) 60%,
+    calc(100% - 0.6px) 70%,
+    calc(100% - 1.2px) 80%,
+    calc(100% - 1.2px) 90%,
+    calc(100% - 1.4px) calc(100% - 2.4px),
+    100% calc(100% - 2.8px),
+    97.5% calc(100% - 1.2px),
+    95% calc(100% - 5.2px),
+    92.5% calc(100% - 4.4px),
+    90% calc(100% - 2px),
+    87.5% calc(100% - 1.2px),
+    85% calc(100% - 2px),
+    82.5% calc(100% - 5.2px),
+    80% calc(100% - 1.2px),
+    77.5% calc(100% - 2px),
+    75% calc(100% - 3.6px),
+    72.5% calc(100% - 1.2px),
+    70% calc(100% - 4.4px),
+    67.5% calc(100% - 5.2px),
+    65% calc(100% - 4.4px),
+    62.5% calc(100% - 3.6px),
+    60% calc(100% - 1.2px),
+    57.5% calc(100% - 5.2px),
+    55% calc(100% - 5.2px),
+    52.5% calc(100% - 1.2px),
+    50% calc(100% - 4.4px),
+    47.5% calc(100% - 3.6px),
+    45% calc(100% - 5.2px),
+    42.5% calc(100% - 3.6px),
+    40% calc(100% - 1.2px),
+    37.5% calc(100% - 1.2px),
+    35% calc(100% - 5.2px),
+    32.5% calc(100% - 4.4px),
+    30% calc(100% - 1.2px),
+    27.5% calc(100% - 1.2px),
+    25% calc(100% - 4.4px),
+    22.5% calc(100% - 5.2px),
+    20% calc(100% - 4.4px),
+    17.5% calc(100% - 4.4px),
+    15% calc(100% - 4.4px),
+    12.5% calc(100% - 4.4px),
+    10% calc(100% - 2px),
+    7.5% calc(100% - 4.4px),
+    5% calc(100% - 3.6px),
+    2.5% calc(100% - 3.6px),
+    0% calc(100% - 2.8px),
+    1.2px 90%,
+    2.4px 80%,
+    0.6px 70%,
+    1.8px 60%,
+    1.8px 50%,
+    1.8px 40%,
+    0.6px 30%,
+    1.2px 20%,
+    1.2px 10%
+  );
+}
+
+.paper-object {
+  position: relative;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 238, 0.45),
+    inset 0 0 34px rgba(108, 82, 46, 0.14);
+}
+
+/* ---------- entry screens: a sheet on the desk ---------- */
+
+.desk {
+  --desk-pad: 10px;
+  min-height: 100dvh;
+  padding: var(--desk-pad);
+  background-color: #17130f;
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(132, 104, 62, 0.34), transparent 58%),
+    radial-gradient(ellipse at 50% 120%, rgba(0, 0, 0, 0.72), transparent 62%),
+    radial-gradient(rgba(255, 246, 226, 0.035) 0.5px, transparent 0.75px);
+  background-size: 100% 100%, 100% 100%, 3.2px 3.2px;
+}
+
+@media (min-width: 640px) {
+  .desk {
+    --desk-pad: 18px;
+  }
+}
+
+.page-frame {
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.6);
+}
+
+.page-sheet {
+  min-height: calc(100dvh - var(--desk-pad) * 2);
+}
+
+/* The entry sheet skips the wavy header rule: at page scale it reads as a
+   stray line under the masthead. Fibre and mottling are kept. */
+.paper-sheet-page {
+  background-image:
+    radial-gradient(rgba(94, 72, 42, 0.11) 0.55px, transparent 0.82px),
+    radial-gradient(rgba(94, 72, 42, 0.07) 0.5px, transparent 0.78px),
+    repeating-linear-gradient(0deg, rgba(120, 96, 58, 0.028) 0 1px, transparent 1px 27px),
+    radial-gradient(ellipse at 14% 0%, rgba(255, 252, 242, 0.65), transparent 58%),
+    radial-gradient(ellipse at 90% 104%, rgba(122, 92, 50, 0.17), transparent 60%),
+    linear-gradient(180deg, #faf5e8 0%, #f2e9d5 100%);
+  background-size:
+    3.1px 3.1px,
+    5.4px 5.4px,
+    100% 27px,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    0 0,
+    1.7px 1.9px,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat, no-repeat;
+}
+
+.page-sheet .ink-btn {
+  background: #f8f2e3;
+}
+
+.page-sheet .ink-btn-solid {
+  background: var(--color-ink);
+}
+
+/* ---------- frames ---------- */
+
+.frame-double {
+  position: relative;
+  border: 1.5px solid var(--color-ink);
+}
+
+.frame-double::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(25, 26, 28, 0.32);
+  pointer-events: none;
+}
+
+.frame-red {
+  border: 1.5px solid var(--color-red);
+}
+
+.shadow-hard {
+  box-shadow: 5px 5px 0 0 rgba(25, 26, 28, 0.9);
+}
+
+.shadow-hard-sm {
+  box-shadow: 3px 3px 0 0 rgba(25, 26, 28, 0.72);
+}
+
+.shadow-hard-red {
+  box-shadow: 4px 4px 0 0 rgba(138, 58, 49, 0.75);
+}
+
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.6px solid currentColor;
+  color: var(--color-red);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  transform: rotate(-4deg);
+  opacity: 0.9;
+}
+
+.stamp-square {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.8px solid currentColor;
+  color: var(--color-red);
+  font-family: var(--font-title);
+  font-weight: 700;
+  line-height: 1;
+  transform: rotate(-5deg);
+}
+
+/* ---------- controls ---------- */
+
+.ink-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1.4px solid var(--color-ink);
+  background: var(--color-sheet);
+  padding: 0.5rem 1rem;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  transition:
+    background-color 130ms ease,
+    color 130ms ease,
+    transform 130ms ease,
+    box-shadow 130ms ease;
+}
+
+.ink-btn:hover:not(:disabled) {
+  background: var(--color-ink);
+  color: var(--color-sheet);
+}
+
+.ink-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.ink-btn:disabled {
+  border-color: var(--color-line);
+  color: var(--color-ink-40);
+  background: var(--color-paper-2);
+}
+
+.ink-btn-solid {
+  background: var(--color-ink);
+  color: var(--color-sheet);
+}
+
+.ink-btn-solid:hover:not(:disabled) {
+  background: var(--color-red);
+  border-color: var(--color-red);
+  color: #fdfbf6;
+}
+
+.ink-btn-red {
+  background: var(--color-red);
+  border-color: var(--color-red);
+  color: #fdfbf6;
+}
+
+.ink-btn-red:hover:not(:disabled) {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.link-underline {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+input[type='range'] {
+  accent-color: var(--color-ink);
+}
+
+/* ---------- animation ---------- */
+
+.page-in {
+  animation: pageIn 420ms cubic-bezier(0.22, 0.8, 0.28, 1) both;
+}
+
+.feed-in {
+  animation: feedIn 480ms cubic-bezier(0.22, 0.8, 0.28, 1) both;
+}
+
+.stamp-in {
+  animation: stampIn 380ms cubic-bezier(0.22, 1.1, 0.35, 1) both;
+}
+
+.slide-up {
+  animation: slideUp 420ms cubic-bezier(0.22, 0.8, 0.28, 1) both;
+}
+
+.blink {
+  animation: blink 1.1s steps(1, end) infinite;
+}
+
+.caret::after {
+  content: '▌';
+  margin-left: 1px;
+  font-size: 0.8em;
+  animation: blink 1s steps(1, end) infinite;
+}
+
+.printing-feed {
+  animation: feedPaper 1500ms linear both;
+}
+
+.receipt-out {
+  animation: receiptOut 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.redaction-bar {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(25, 26, 28, 0.82) 0 5px,
+    rgba(25, 26, 28, 0.52) 5px 10px
+  );
+}
+
+.print-scan {
+  position: absolute;
+  inset-inline: 0;
+  height: 18px;
+  background: linear-gradient(to bottom, rgba(138, 58, 49, 0), rgba(138, 58, 49, 0.16));
+  border-bottom: 1px solid rgba(138, 58, 49, 0.5);
+  animation: printScan 1100ms linear infinite;
+}
+
+@keyframes printScan {
+  from {
+    top: -18px;
+  }
+  to {
+    top: 100%;
+  }
+}
+
+.flicker {
+  animation: flicker 5s linear infinite;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes feedIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stampIn {
+  from {
+    opacity: 0;
+    transform: scale(1.5) rotate(-10deg);
+  }
+  to {
+    opacity: 0.9;
+    transform: scale(1) rotate(-4deg);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes feedPaper {
+  from {
+    transform: translateY(-102%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes receiptOut {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes flicker {
+  0%,
+  97%,
+  100% {
+    opacity: 1;
+  }
+  97.6% {
+    opacity: 0.55;
+  }
+  98.2% {
+    opacity: 0.9;
+  }
+}
+
+/* ---------- immersive scene ---------- */
+
+.scene-in {
+  animation: sceneIn 900ms ease-out both;
+}
+
+.scene-drift {
+  animation: sceneDrift 26s ease-in-out infinite alternate;
+  transform-origin: 50% 42%;
+}
+
+.sheet-up {
+  animation: sheetUp 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.speak-halo {
+  animation: speakHalo 1800ms ease-in-out infinite;
+}
+
+@keyframes speakHalo {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes sceneIn {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes sceneDrift {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.09);
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- main menu ---------- */
+
+.main-menu {
+  position: relative;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #ece7db;
+  color: var(--color-ink);
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+.main-menu-splash {
+  cursor: pointer;
+  background:
+    radial-gradient(ellipse at 50% 44%, #f4f0e6 0%, rgba(244, 240, 230, 0) 62%),
+    #ece7db;
+  outline: none;
+}
+
+.echo-char {
+  display: inline-block;
+  animation: echoCharIn 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.echo-ripple {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(25, 26, 28, 0.42);
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  animation: echoRipple 2400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.echo-cursor-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(25, 26, 28, 0.34);
+  transform: translate(-50%, -50%) scale(0.82);
+  opacity: 0;
+  animation: echoCursor 3600ms ease-out infinite;
+}
+
+.echo-cursor-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(25, 26, 28, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+.menu-reveal-shell {
+  position: relative;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #ece7db;
+}
+
+.menu-reveal-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  will-change: clip-path;
+  animation: revealOpen 1100ms cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+.menu-reveal-layer.is-ready {
+  pointer-events: auto;
+}
+
+.menu-reveal-layer > .main-menu {
+  height: 100%;
+}
+
+.splash-burst-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(25, 26, 28, 0.32);
+  transform: translate(-50%, -50%) scale(0.015);
+  animation: burstRing 1100ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 60ms forwards;
+}
+
+.menu-enter {
+  animation: menuEnter 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.dm-float {
+  animation: dmFloat 7s ease-in-out infinite alternate;
+}
+
+.dm-hero {
+  width: auto;
+  max-width: none;
+}
+
+.dm-step-in {
+  animation: dmStepIn 640ms cubic-bezier(0.33, 0, 0.2, 1) both;
+}
+
+.menu-start-in {
+  animation: menuStartIn 520ms cubic-bezier(0.33, 0, 0.2, 1) both;
+}
+
+.stage-nameplate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url('/assets/yinian/ui/nameplate.webp');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  filter: drop-shadow(0 1px 1.5px rgba(25, 26, 28, 0.4));
+}
+
+.script-folder-in {
+  animation: scriptFolderIn 1350ms cubic-bezier(0.22, 0.72, 0.18, 1) 400ms both;
+}
+
+@keyframes scriptFolderIn {
+  from {
+    transform: translateY(calc(100% + 48px));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.script-paper {
+  transform: rotate(-1.2deg);
+}
+
+@keyframes menuStartIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dmStepIn {
+  from {
+    opacity: 0.35;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes echoCharIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes echoRipple {
+  0% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.18);
+  }
+  55% {
+    opacity: 0.32;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes echoCursor {
+  0% {
+    opacity: 0.42;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+  65% {
+    opacity: 0.16;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+@keyframes revealOpen {
+  from {
+    clip-path: circle(0px at var(--rx) var(--ry));
+  }
+  to {
+    clip-path: circle(var(--far) at var(--rx) var(--ry));
+  }
+}
+
+@keyframes burstRing {
+  0% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(0.015);
+  }
+  70% {
+    opacity: 0.28;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes menuEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dmFloat {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-12px);
+  }
+}
+
+/* ---------- classroom curtain ---------- */
+
+.curtain-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.curtain-gate:not(.is-opening) {
+  pointer-events: auto;
+}
+
+.curtain-gate-backdrop {
+  position: absolute;
+  inset: 0;
+  background: #06070a;
+  opacity: 1;
+  transition: opacity 1600ms ease 150ms;
+}
+
+.curtain-gate.is-opening .curtain-gate-backdrop {
+  opacity: 0;
+}
+
+.curtain-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  width: 50.2%;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 2300ms cubic-bezier(0.62, 0.02, 0.3, 1);
+}
+
+.curtain-panel-left {
+  left: 0;
+}
+
+.curtain-panel-right {
+  right: 0;
+}
+
+.curtain-panel img {
+  position: absolute;
+  top: -3px;
+  width: 100vw;
+  height: calc(100% + 6px);
+  max-width: none;
+  object-fit: cover;
+  object-position: center 45%;
+  user-select: none;
+}
+
+.curtain-panel-left img {
+  left: 0;
+}
+
+.curtain-panel-right img {
+  right: 0;
+}
+
+.curtain-panel-left.is-open {
+  transform: translate3d(-101.5%, 0, 0);
+}
+
+.curtain-panel-right.is-open {
+  transform: translate3d(101.5%, 0, 0);
+}
+
+.curtain-panel-left::after,
+.curtain-panel-right::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(10vw, 180px);
+  pointer-events: none;
+}
+
+.curtain-panel-left::after {
+  right: 0;
+  background: linear-gradient(to right, rgba(6, 7, 10, 0), rgba(6, 7, 10, 0.32));
+}
+
+.curtain-panel-right::after {
+  left: 0;
+  background: linear-gradient(to left, rgba(6, 7, 10, 0), rgba(6, 7, 10, 0.32));
+}
+
+.curtain-gate-card {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition:
+    opacity 480ms ease,
+    transform 560ms cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.curtain-gate.is-opening .curtain-gate-card {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+.curtain-skip {
+  position: absolute;
+  right: clamp(12px, 2vw, 30px);
+  bottom: clamp(12px, 2vh, 28px);
+  z-index: 40;
+  pointer-events: auto;
+  border: 1px solid rgba(236, 231, 219, 0.35);
+  background: rgba(6, 7, 10, 0.55);
+  padding: 7px 11px;
+  color: rgba(236, 231, 219, 0.72);
+  backdrop-filter: blur(4px);
+  transition:
+    border-color 200ms ease,
+    color 200ms ease,
+    background 200ms ease;
+}
+
+.curtain-skip:hover {
+  border-color: #ece7db;
+  background: rgba(6, 7, 10, 0.78);
+  color: #ece7db;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- scrollbars ---------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(25, 26, 28, 0.35) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(25, 26, 28, 0.32);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- browser print ---------- */
+
+#print-portal {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  body #root {
+    display: none !important;
+  }
+
+  #print-portal {
+    display: block !important;
+  }
+
+  .print-sheet {
+    background: #fff !important;
+    color: #111 !important;
+    border: 1px solid #111 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Batch pre-class archives: one character sheet per page. */
+  #print-portal .print-sheet + .print-sheet {
+    break-before: page;
+    page-break-before: always;
+  }
+}
