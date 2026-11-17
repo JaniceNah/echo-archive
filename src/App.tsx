@@ -5,7 +5,6 @@ import { About } from './pages/About'
 import { Classroom } from './pages/Classroom'
 import { Clues } from './pages/Clues'
 import { Compare } from './pages/Compare'
-import { Cover } from './pages/Cover'
 import { Create } from './pages/Create'
 import { Dossier } from './pages/Dossier'
 import { Ending } from './pages/Ending'
@@ -66,7 +65,7 @@ export default function App() {
       <ScrollToTop />
       <EntryGuard />
       <Routes>
-        <Route path="/" element={<Cover />} />
+        <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Home />} />
         <Route path="/create" element={<Create />} />
         <Route path="/draft/:storyId" element={<ScriptDraft />} />
@@ -88,7 +87,7 @@ export default function App() {
         <Route path="/help" element={<Help />} />
         <Route path="/about" element={<About />} />
         {import.meta.env.DEV ? <Route path="/voice-lab" element={<VoiceLab />} /> : null}
-        <Route path="*" element={<Cover />} />
+        <Route path="*" element={<Home />} />
       </Routes>
       <PrintOverlay />
     </HashRouter>
