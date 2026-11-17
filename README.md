@@ -2,6 +2,8 @@
 
 > 每个选择，都会留下痕迹。
 
+**在线体验：<https://echo-archive-rust.vercel.app>**（桌面 Chrome / Edge；AI 语音需要 WebGPU，不支持时自动回退系统语音）
+
 面向 12–16 岁学生的多人互动情绪教育叙事原型。4–6 名玩家在 AI DM「管理员·零」的引导下完成三幕故事，在家庭、学业、师生、同伴与网络生活等情境中识别情绪、表达立场，并看见选择的后果。
 
 **当前版本是本地规则引擎演示，不连接真实大模型，不采集真实学生身份，也不生成心理诊断或霸凌风险等级。**
@@ -13,6 +15,9 @@ npm install
 npm run dev      # 本地开发
 npm run build    # 类型检查 + 生产构建
 npm run preview  # 预览 dist
+
+# 线上部署（Vercel 静态托管单文件上限 100MB，模型需先拆片）
+npm run build && node scripts/pack-model.mjs dist && npx vercel deploy dist --prod
 ```
 
 技术栈：Vite + React 19 + TypeScript（strict）+ Tailwind CSS v4 + React Router（HashRouter）+ Zustand persist。

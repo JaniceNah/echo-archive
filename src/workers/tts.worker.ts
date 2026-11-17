@@ -21,6 +21,71 @@ const cancelled = new Set<number>()
 let lastProgress = -1
 let queue: Promise<unknown> = Promise.resolve()
 
+const WEIGHTS_PATH = `models/${MODEL_ID}/onnx/model.onnx`
+const MANIFEST_PATH = `${WEIGHTS_PATH}.parts.json`
+
+let shimInstalled = false
+let packedWeights: Promise<Blob> | null = null
+
+// Deployed builds cannot ship a 324MB file (static hosts cap uploads at 100MB),
+// so scripts/pack-model.mjs splits the weights into parts. Serve them to
+// transformers.js as if they were the original file; local dev builds still
+// have the real model.onnx and pass through untouched.
+function installWeightsShim() {
+  if (shimInstalled) return
+  shimInstalled = true
+  const originalFetch = env.fetch.bind(env)
+  env.fetch = async (input, init) => {
+    // transformers.js only ever passes URL strings into env.fetch.
+    const raw = typeof input === 'string' ? input : (input as URL).href
+    if (!new URL(raw, base).pathname.endsWith(`/${WEIGHTS_PATH}`)) return originalFetch(input, init)
+
+    const direct = await originalFetch(input, init)
+    // A missing file shows up either as a 404 or (with SPA fallbacks) as 200 text/html.
+    if (direct.ok && !(direct.headers.get('content-type') ?? '').includes('text/html')) return direct
+
+    const manifest = await originalFetch(`${base}${MANIFEST_PATH}`).then((response) => {
+      if (!response.ok) throw new Error('模型权重既不在本地，也没有分片包')
+      return response.json() as Promise<{ total: number; parts: string[] }>
+    })
+
+    const range = new Headers(init?.headers).get('range')
+    if (range) {
+      // transformers.js probes the file size with a one-byte range request.
+      return new Response(new Uint8Array(1), {
+        status: 206,
+        headers: {
+          'content-range': `bytes 0-0/${manifest.total}`,
+          'content-length': '1',
+        },
+      })
+    }
+
+    if (!packedWeights) {
+      packedWeights = Promise.all(
+        manifest.parts.map((name) =>
+          originalFetch(`${base}${WEIGHTS_PATH}.${name}`).then((response) => {
+            if (!response.ok) throw new Error(`模型分片 ${name} 加载失败 (${response.status})`)
+            return response.arrayBuffer()
+          }),
+        ),
+      )
+        .then((buffers) => new Blob(buffers))
+        .catch((error: unknown) => {
+          packedWeights = null
+          throw error
+        })
+    }
+    const blob = await packedWeights
+    return new Response(blob, {
+      headers: {
+        'content-length': String(blob.size),
+        'content-type': 'application/octet-stream',
+      },
+    })
+  }
+}
+
 async function hasWebGpu() {
   const gpu = (ctx.navigator as unknown as { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu
   if (!gpu) return false
@@ -44,6 +109,7 @@ async function load(): Promise<KokoroTTS> {
   env.useBrowserCache = true
   env.backends.onnx.wasm!.numThreads = 1
   env.backends.onnx.wasm!.wasmPaths = `${base}ort/`
+  installWeightsShim()
 
   const instance = await KokoroTTS.from_pretrained(MODEL_ID, {
     dtype: 'fp32',
